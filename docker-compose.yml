@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  
+  db:
+    image: postgres
+    container_name: postgres
+    networks:
+      - postgres_network
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: tunaiku
+      POSTGRES_PASSWORD: tunaiku
+      POSTGRES_DB: tunaiku
+
+networks:
+  postgres_network:
+    name: postgres_network
