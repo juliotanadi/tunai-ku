@@ -11,7 +11,7 @@ async function getLoanApplicationByDate(req, res) {
     });
 
   try {
-    const startDate = moment(Date).subtract(7, "days");
+    const startDate = moment(Date).subtract(6, "days");
     const endDate = moment(Date);
 
     const loan = await Loan.findAll({
@@ -34,7 +34,7 @@ async function getLoanApplicationByDate(req, res) {
       Average: Math.round(loan[0].Average * 100) / 100
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).send({ error });
   }
 }
 
