@@ -1,4 +1,42 @@
+const moment = require("moment");
+const sequelize = require("sequelize");
 const { Loan } = require("../models");
+
+async function getLoanApplicationByDate(req, res) {
+  const { Date } = req.body;
+
+  if (!Date)
+    return res.status(400).send({
+      errors: [`Date is required`]
+    });
+
+  try {
+    const startDate = moment(Date).subtract(7, "days");
+    const endDate = moment(Date);
+
+    const loan = await Loan.findAll({
+      attributes: [
+        [sequelize.fn("sum", sequelize.col("amount")), "Summary"],
+        [sequelize.fn("count", sequelize.col("id")), "Count"],
+        [sequelize.fn("avg", sequelize.col("amount")), "Average"]
+      ],
+      raw: true,
+      created_at: {
+        $between: [startDate, endDate]
+      }
+    });
+
+    if (loan.length === 0) return res.send({ loan });
+
+    return res.send({
+      Count: loan[0].Count,
+      Summary: Math.round(loan[0].Summary * 100) / 100,
+      Average: Math.round(loan[0].Average * 100) / 100
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 async function insert(req, res) {
   const errors = validateKtpNumber(req.body);
@@ -77,5 +115,6 @@ function validateKtpNumber(data) {
 }
 
 module.exports = {
+  getLoanApplicationByDate,
   insert
 };
