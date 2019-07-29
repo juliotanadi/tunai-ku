@@ -1,4 +1,4 @@
-# Tunaiku Teschincal Test
+# Tunaiku Technical Test
 
 Hi! My name is Julio Tanadi.
 This is my repository that contain of my source code for technical test at Tunaiku.
